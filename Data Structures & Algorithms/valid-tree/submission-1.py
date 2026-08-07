@@ -1,31 +1,39 @@
+from collections import defaultdict
+
 class Solution:
-    def validTree(self, n: int, edges: List[List[int]]) -> bool:
-        
-        connectionDict = {}
-        for i in range(n):
-            connectionDict[i] = []
+    def validTree(self, n, edges):
 
-        for elem in edges:
-            connectionDict[elem[0]].append(elem[1])
-            connectionDict[elem[1]].append(elem[0])
+        # Key Data Structure: Graph (Cycle Detection with DFS)
 
+        if not n:
+            return True  # edge case: 0 nodes is trivially a valid tree
 
-        
-        visited = set()
+        # build adjacency list — undirected, so add both directions per edge
+        adj = defaultdict(list)
+        for n1, n2 in edges:
+            adj[n1].append(n2)
+            adj[n2].append(n1)
 
-        def dfs(nodeID,parentID):
-            nonlocal visited
+        visit = set()  # tracks all nodes visited during DFS
 
-            if nodeID in visited:
-                return True
-            
-            #never remove, as we want to detect cycles
-            visited.add(nodeID)
+        def dfs(i, prev):
+            if i in visit:
+                return False  # already visited this node — cycle detected!
 
-            for adjacentNode in connectionDict[nodeID]:
-                if adjacentNode != parentID:
-                    if dfs(adjacentNode,nodeID):
-                        return True
+            visit.add(i)
 
-        
-        return False if dfs(0,-1) else len(visited) == n
+            for j in adj[i]:
+                if j == prev:
+                    continue  # skip going back the way we came (not a real cycle)
+                if not dfs(j, i):
+                    return False  # cycle found deeper — propagate failure up
+
+            return True  # no cycle found through this node's subtree
+
+        # start DFS from node 0:
+        #   dfs(0,-1) → True only if no cycles exist
+        #   n == len(visit) → True only if every node was reached (fully connected)
+        return dfs(0, -1) and n == len(visit)
+
+        # Time Complexity:  O(V + E) — visit every node and edge once
+        # Space Complexity: O(V + E) — adjacency list + visited set + recursion stack
