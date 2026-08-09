@@ -23,7 +23,7 @@ class Solution:
             # that tells us: this character in word1 comes before that character in word2
             for j in range(min_len):
                 if word1[j] != word2[j]:
-                    adj[word1[j]].add(word2[j])
+                    adj[word1[j]].add(word2[j]) # t -> r ordering is established
                     break  # only the first difference matters, stop looking
 
         # Step 3: topological sort using DFS with cycle detection
