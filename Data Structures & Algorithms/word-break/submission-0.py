@@ -3,7 +3,7 @@ class Solution:
 
         # Key Data Structure: Dynamic Programming (Bottom-Up)
 
-        dp = [False] * (len(s) + 1)  # dp[i] = can s[i:] be fully segmented into dictionary words?
+        dp = [False] * (len(s) + 1)  # dp[i] = can s[i:] be fully segmented into dictionary words? len + 1 to handle base case at the end which is set to true
         dp[len(s)] = True  # base case: empty remaining string is trivially "breakable"
 
         # walk backwards from the end of the string to the start
