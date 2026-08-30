@@ -1,9 +1,15 @@
 class Solution:
     def hammingWeight(self, n: int) -> int:
-        count = 0
-        binary_str = format(n & 0xFFFFFFFF, '032b')
-        for i in range(len(binary_str)):
-            if binary_str[i] == "1" :
-                count += 1
 
-        return count
+        # Key Data Structure: Bit Manipulation
+
+        ans = 0  # counts how many 1 bits we've found
+
+        while n != 0:
+            ans += 1          # found one set bit — count it
+            n = n & (n - 1)   # clears the LOWEST set bit in n (see explanation below)
+
+        return ans
+
+        # Time Complexity: O(k) — k = number of 1 bits in n (not the total bit-width!)
+        # Space Complexity: O(1) — just a counter
